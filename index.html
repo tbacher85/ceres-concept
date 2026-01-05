@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ceres | The Trust Network for Ancient Grains</title>
+    <!-- Fonts: Elegant & Readable -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- QR Code Generation Library -->
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+    <style>
+        /* === CSS RESET & ROOT VARIABLES === */
+        :root {
+            --primary-earth: #8B4513;
+            --primary-gold: #D4A017;
+            --primary-olive: #6B8E23;
+            --neutral-light: #FAF3E0;
+            --neutral-dark: #2F2F2F;
+            --shadow: 0 10px 30px rgba(139, 69, 19, 0.1);
+            --transition: all 0.3s ease;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.7;
+            color: var(--neutral-dark);
+            background-color: #fff;
+            max-width: 100vw;
+            overflow-x: hidden;
+        }
+        h1, h2, h3, .brand { font-family: 'Cinzel', serif; font-weight: 700; }
+        .container { width: 100%; max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
+        section { padding: 5rem 0; }
+
+        /* === HEADER & NAVIGATION === */
+        header {
+            background-color: rgba(255, 255, 255, 0.98);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            position: fixed; top: 0; width: 100%; z-index: 1000;
+            padding: 1rem 0;
+        }
+        nav.container {
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .brand {
+            font-size: 1.8rem; color: var(--primary-earth); text-decoration: none;
+            display: flex; align-items: center; gap: 0.5rem;
+        }
+        .brand i { color: var(--primary-gold); }
+        .nav-links { display: flex; align-items: center; gap: 2.5rem; }
+        .nav-links a {
+            text-decoration: none; color: var(--neutral-dark); font-weight: 500;
+            transition: var(--transition);
+        }
+        .nav-links a:hover { color: var(--primary-earth); }
+        #language-toggle {
+            background: var(--primary-olive); color: white; border: none;
+            padding: 0.5rem 1rem; border-radius: 50px; cursor: pointer;
+            font-weight: 600; transition: var(--transition);
+        }
+        #language-toggle:hover { background: var(--primary-earth); }
+
+        /* === HERO SECTION === */
+        .hero {
+            min-height: 100vh; display: flex; align-items: center;
+            background: linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.8)),
+                        url('https://images.unsplash.com/photo-1509440159596-0249088772ff?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80') center/cover no-repeat;
+            text-align: center; padding-top: 5rem;
+        }
+        .hero h1 { font-size: clamp(2.5rem, 5vw, 4rem); margin-bottom: 1.5rem; color: var(--primary-earth); }
+        .hero p {
+            font-size: 1.3rem; max-width: 700px; margin: 0 auto 3rem;
+            color: #555;
+        }
+        .cta-button {
+            display: inline-block; background: var(--primary-earth);
+            color: white; padding: 1.2rem 3rem; border-radius: 50px;
+            text-decoration: none; font-weight: 600; font-size: 1.1rem;
+            transition: var(--transition); box-shadow: var(--shadow);
+            border: 2px solid var(--primary-earth);
+        }
+        .cta-button:hover {
+            background: transparent; color: var(--primary-earth);
+            transform: translateY(-5px);
+        }
+
+        /* === EDUCATION SECTION === */
+        .education { background-color: var(--neutral-light); }
+        .section-title { text-align: center; margin-bottom: 3.5rem; color: var(--primary-earth); }
+        .grain-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2.5rem; margin-top: 2rem;
+        }
+        .grain-card {
+            background: white; padding: 2.5rem; border-radius: 16px;
+            box-shadow: var(--shadow); transition: var(--transition);
+            border-top: 5px solid var(--primary-olive);
+            text-align: center;
+        }
+        .grain-card:hover { transform: translateY(-10px); }
+        .grain-card i { font-size: 2.5rem; color: var(--primary-gold); margin-bottom: 1.5rem; }
+        .grain-card h3 { margin-bottom: 1rem; color: var(--primary-olive); }
+
+        /* === SIMULATION SECTION - THE CORE DEMO === */
+        .demo { background: white; }
+        .simulation-box {
+            background: white; border-radius: 20px; padding: 3rem;
+            max-width: 900px; margin: 3rem auto; box-shadow: 0 20px 60px rgba(139, 69, 19, 0.15);
+            border: 1px solid #eee;
+        }
+        .demo-steps {
+            display: flex; flex-wrap: wrap; justify-content: center; gap: 2rem;
+            margin: 3rem 0;
+        }
+        .step {
+            flex: 1; min-width: 220px; text-align: center; padding: 2rem;
+            background: var(--neutral-light); border-radius: 12px;
+        }
+        .step-number {
+            width: 50px; height: 50px; background: var(--primary-earth);
+            color: white; border-radius: 50%; display: flex; align-items: center;
+            justify-content: center; font-family: 'Cinzel'; font-size: 1.5rem;
+            margin: 0 auto 1rem;
+        }
+        /* QR Code Container */
+        #qrcode-container {
+            margin: 2.5rem auto; padding: 1.5rem; background: #f9f9f9;
+            border-radius: 12px; display: inline-block;
+        }
+        #qrcode { display: inline-block; }
+        /* Product Passport */
+        #product-passport {
+            background: white; border: 2px solid var(--primary-olive);
+            border-radius: 12px; padding: 2.5rem; margin-top: 2.5rem;
+            text-align: left; display: none; box-shadow: var(--shadow);
+        }
+        .passport-header {
+            display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 2px solid #eee; padding-bottom: 1rem; margin-bottom: 2rem;
+        }
+        .passport-field {
+            display: grid; grid-template-columns: 1fr 2fr; margin-bottom: 1.2rem;
+            padding-bottom: 1rem; border-bottom: 1px dashed #eee;
+        }
+        .field-label { font-weight: 700; color: var(--primary-earth); }
+
+        /* === FORMSPREE SIGNUP FORM === */
+        .signup { background: var(--neutral-dark); color: white; text-align: center; }
+        .signup .section-title { color: var(--primary-gold); }
+        .form-subtitle { margin-bottom: 3rem; color: #ccc; }
+        .fs-form {
+            max-width: 600px; margin: 0 auto; display: grid; gap: 1.8rem;
+        }
+        .fs-field { text-align: left; }
+        .fs-label { display: block; margin-bottom: 0.7rem; font-weight: 600; color: var(--primary-gold); }
+        .fs-input, .fs-textarea, .fs-select {
+            width: 100%; padding: 1rem; border-radius: 8px; border: 1px solid #555;
+            background: rgba(255,255,255,0.05); color: white; font-size: 1rem;
+            transition: var(--transition); font-family: 'Inter', sans-serif;
+        }
+        .fs-input:focus, .fs-textarea:focus, .fs-select:focus {
+            outline: none; border-color: var(--primary-gold); background: rgba(255,255,255,0.1);
+        }
+        .fs-button {
+            background: var(--primary-gold); color: var(--neutral-dark);
+            padding: 1.2rem 2.5rem; border: none; border-radius: 8px;
+            font-family: 'Cinzel', serif; font-size: 1.1rem; font-weight: 700;
+            cursor: pointer; transition: var(--transition); justify-self: start;
+            margin-top: 1rem;
+        }
+        .fs-button:hover { background: #e6b800; }
+        #form-status { margin-top: 1.5rem; padding: 1rem; border-radius: 8px; display: none; }
+        .success { background: #10b981; color: white; }
+        .error { background: #ef4444; color: white; }
+
+        /* === FOOTER & RESPONSIVE === */
+        footer {
+            background: var(--primary-earth); color: var(--neutral-light);
+            text-align: center; padding: 3rem 1.5rem; font-family: 'Cinzel';
+        }
+        @media (max-width: 768px) {
+            .container { padding: 0 1.5rem; }
+            section { padding: 3.5rem 0; }
+            .nav-links { display: none; } /* Consider a mobile menu for full site */
+            .hero h1 { font-size: 2.5rem; }
+            .grain-grid { grid-template-columns: 1fr; }
+            .simulation-box { padding: 2rem 1.5rem; }
+            .demo-steps { flex-direction: column; }
+            .passport-field { grid-template-columns: 1fr; gap: 0.5rem; }
+        }
+    </style>
+</head>
+<body>
+    <!-- HEADER & NAV -->
+    <header>
+        <nav class="container">
+            <a href="#" class="brand"><i class="fas fa-seedling"></i> <span data-i18n="nav.brand">CERES</span></a>
+            <div class="nav-links">
+                <a href="#education" data-i18n="nav.education">The Grains</a>
+                <a href="#demo" data-i18n="nav.demo">Traceability Demo</a>
+                <a href="#signup" data-i18n="nav.signup">Join the Network</a>
+                <button id="language-toggle">EN</button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- HERO SECTION -->
+    <section class="hero">
+        <div class="container">
+            <h1 data-i18n="hero.title">Authentic Ancient Grains.<br><span style="color:var(--primary-gold);">Digitally Certified.</span></h1>
+            <p data-i18n="hero.subtitle">Ceres is the trusted B2B network directly connecting European quality buyers with verified producers of heritage grains from Armenia and unique terroirs. Every batch has a story. We certify it.</p>
+            <a href="#signup" class="cta-button" data-i18n="hero.cta">Request Early Access</a>
+        </div>
+    </section>
+
+    <!-- EDUCATION SECTION -->
+    <section id="education" class="education">
+        <div class="container">
+            <h2 class="section-title" data-i18n="education.title">Beyond Wheat: Rediscover Ancient Grains</h2>
+            <p class="section-subtitle" data-i18n="education.subtitle" style="text-align:center; max-width:800px; margin:0 auto 3rem;">These heritage varieties, cultivated for millennia, offer exceptional agronomic, nutritional, and gastronomic value.</p>
+            <div class="grain-grid">
+                <div class="grain-card">
+                    <i class="fas fa-wheat-awn"></i>
+                    <h3 data-i18n="grain.1.title">Einkorn (Petit Épeautre)</h3>
+                    <p data-i18n="grain.1.desc">The most ancient wheat. Prized for its subtle nutty flavor and highly digestible gluten.</p>
+                </div>
+                <div class="grain-card">
+                    <i class="fas fa-seedling"></i>
+                    <h3 data-i18n="grain.2.title">Emmer (Amidonnier)</h3>
+                    <p data-i18n="grain.2.desc">A hardy, nutritious ancestor of durum wheat. Excellent for artisanal bread and pasta.</p>
+                </div>
+                <div class="grain-card">
+                    <i class="fas fa-sun"></i>
+                    <h3 data-i18n="grain.3.title">Khorasan Wheat (Kamut®)</h3>
+                    <p data-i18n="grain.3.desc">Known for its large, amber grains and rich, buttery taste. High in protein and minerals.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- INTERACTIVE DEMONSTRATION -->
+    <section id="demo" class="demo">
+        <div class="container">
+            <h2 class="section-title" data-i18n="demo.title">Trust, Sealed in a QR Code</h2>
+            <p style="text-align:center; max-width:700px; margin:0 auto 1rem;" data-i18n="demo.subtitle">See the power of the Ceres Digital Passport. This simulation shows the immutable journey of a single batch.</p>
+
+            <div class="simulation-box">
+                <h3 style="color:var(--primary-earth); margin-bottom:2rem; text-align:center;"><i class="fas fa-qrcode"></i> <span data-i18n="demo.simtitle">DIGITAL PASSPORT SIMULATION</span></h3>
+
+                <div class="demo-steps">
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <h4 data-i18n="demo.step1.title">Source</h4>
+                        <p data-i18n="demo.step1.desc">A producer registers the harvest batch on the Ceres platform.</p>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <h4 data-i18n="demo.step2.title">Certify</h4>
+                        <p data-i18n="demo.step2.desc">Data (origin, variety, analyses) is cryptographically secured to a unique QR code.</p>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <h4 data-i18n="demo.step3.title">Verify</h4>
+                        <p data-i18n="demo.step3.desc">Any buyer scans the code to access the full, tamper-proof history.</p>
+                    </div>
+                </div>
+
+                <div style="text-align:center;">
+                    <!-- QR Code will be generated here by JavaScript -->
+                    <div id="qrcode-container">
+                        <p><strong data-i18n="demo.qrlabel">Scan this demo code:</strong></p>
+                        <div id="qrcode"></div>
+                        <p style="margin-top:1rem; font-size:0.9rem;"><strong>Lot ID:</strong> <span id="lot-id">CERES-AM-742</span></p>
+                    </div>
+                    <p><button onclick="showPassport()" class="cta-button" style="padding:1rem 2.5rem; font-size:1rem;" id="passport-btn"><i class="fas fa-eye"></i> <span data-i18n="demo.showbtn">View Digital Passport</span></button></p>
+                </div>
+
+                <!-- PRODUCT PASSPORT (Initially Hidden) -->
+                <div id="product-passport">
+                    <div class="passport-header">
+                        <h3 style="margin:0; color:var(--primary-olive);"><i class="fas fa-certificate"></i> <span data-i18n="passport.title">CERES DIGITAL PASSPORT</span></h3>
+                        <strong data-i18n="passport.id">ID:</strong> CERES-AM-742
+                    </div>
+                    <div class="passport-field"><span class="field-label" data-i18n="passport.product">Product:</span> <span>Pure Emmer (Amidonnier), Autumn Harvest</span></div>
+                    <div class="passport-field"><span class="field-label" data-i18n="passport.origin">Origin:</span> <span>Highlands of Aragats, Armenia</span></div>
+                    <div class="passport-field"><span class="field-label" data-i18n="passport.producer">Producer:</span> <span>Avetisyan Family Cooperative</span></div>
+                    <div class="passport-field"><span class="field-label" data-i18n="passport.harvest">Harvest Date:</span> <span>15 August 2025</span></div>
+                    <div class="passport-field"><span class="field-label" data-i18n="passport.method">Method:</span> <span>Certified Organic & Biodynamic</span></div>
+                    <div class="passport-field"><span class="field-label" data-i18n="passport.analysis">Analyses:</span> <span>Varietal Purity >99%, No Pesticide Residue, Protein: 14.5%</span></div>
+                    <div class="passport-field"><span class="field-label" data-i18n="passport.journey">Journey:</span> <span>Armenia → Genoa (IT) → Certified Warehouse, Brussels</span></div>
+                    <div class="passport-field"><span class="field-label" data-i18n="passport.cert">Certifications:</span> <span><strong style="color:var(--primary-olive);">✅ Ceres Verified | EU Organic | Slow Food Presidium</strong></span></div>
+                    <div style="margin-top:2.5rem; padding-top:1.5rem; border-top:2px solid var(--primary-earth); font-style: italic; color: var(--primary-earth);" data-i18n="passport.attest">
+                        "This digital passport immutably attests to the authenticity, full traceability, and unique qualities of this batch. It is an integral part of the contract between verified partners."
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FORMSPREE SIGNUP FORM -->
+    <section id="signup" class="signup">
+        <div class="container">
+            <h2 class="section-title" data-i18n="signup.title">Join the Network in Preview</h2>
+            <p class="form-subtitle" data-i18n="signup.subtitle">For professional buyers (importers, millers, premium bakers, distributors) and verified producers of ancient grains.</p>
+
+            <!-- FORM: REPLACE {form_id} WITH YOUR OWN FROM FORMSPREE -->
+            <form id="access-form" class="fs-form" action="https://formspree.io/f/mqeanvvz" method="POST">
+                <div class="fs-field">
+                    <label class="fs-label" for="name" data-i18n="form.name">Name / Company *</label>
+                    <input class="fs-input" type="text" id="name" name="name" required placeholder=" " data-i18n-ph="form.name.ph">
+                </div>
+                <div class="fs-field">
+                    <label class="fs-label" for="email" data-i18n="form.email">Professional Email *</label>
+                    <input class="fs-input" type="email" id="email" name="email" required placeholder=" " data-i18n-ph="form.email.ph">
+                </div>
+                <div class="fs-field">
+                    <label class="fs-label" for="role" data-i18n="form.role">You are: *</label>
+                    <select class="fs-select" id="role" name="role" required>
+                        <option value="" data-i18n="form.role.default">Select your profile</option>
+                        <option value="buyer" data-i18n="form.role.buyer">Buyer / Importer / Distributor</option>
+                        <option value="processor" data-i18n="form.role.processor">Miller / Baker / Artisan</option>
+                        <option value="producer" data-i18n="form.role.producer">Producer / Agricultural Cooperative</option>
+                        <option value="other" data-i18n="form.role.other">Other (please specify in message)</option>
+                    </select>
+                </div>
+                <div class="fs-field">
+                    <label class="fs-label" for="message" data-i18n="form.message">Your Interest in Ceres</label>
+                    <textarea class="fs-textarea" id="message" name="message" rows="4" placeholder=" " data-i18n-ph="form.message.ph"></textarea>
+                </div>
+                <button class="fs-button" type="submit" data-i18n="form.submit"><i class="fas fa-paper-plane"></i> Request My Access</button>
+            </form>
+            <div id="form-status"></div>
+            <p style="margin-top:3rem; font-size:0.9rem; color:#aaa;">
+                <i class="fas fa-lock"></i> <span data-i18n="form.privacy">Your information is secure. We never share your email. See our</span> <a href="#" style="color:var(--primary-gold);" data-i18n="form.privacy.link">privacy policy</a>.
+            </p>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="container">
+            <p style="font-size: 1.8rem; margin-bottom: 1.5rem;"><i class="fas fa-seedling"></i> <strong>CERES</strong></p>
+            <p data-i18n="footer.tagline">The goddess of agriculture reborn in the digital age.<br>Building a transparent, sustainable, and flavorful supply chain together.</p>
+            <p style="margin-top: 2.5rem; font-size: 0.9em; color:#d4a017;">
+                © 2025 Ceres Network. Prototype – Crafted with purpose.
+            </p>
+        </div>
+    </footer>
+
+    <!-- === ALL JAVASCRIPT === -->
+    <script>
+        // ===== 1. BILINGUAL CONTENT SYSTEM =====
+        const translations = {
+            'fr': {
+                // Navigation
+                'nav.brand': 'CERES',
+                'nav.education': 'Les Céréales',
+                'nav.demo': 'Démonstration',
+                'nav.signup': 'Rejoindre',
+                // Hero
+                'hero.title': 'Céréales Anciennes Authentiques.<br><span style="color:var(--primary-gold);">Certifiées Numériquement.</span>',
+                'hero.subtitle': `Ceres est le réseau B2B de confiance qui connecte directement les acheteurs européens exigeants avec des producteurs vérifiés de céréales patrimoniales d'Arménie et d'autres terroirs uniques. Chaque lot a une histoire. Nous la certifions.`,
+                'hero.cta': 'Demander un Accès Anticipé',
+                // Education
+                'education.title': 'Au-Delà du Blé : Redécouvrez les Céréales Anciennes',
+                'education.subtitle': 'Ces variétés patrimoniales, cultivées depuis des millénaires, offrent une valeur agronomique, nutritionnelle et gastronomique exceptionnelle.',
+                'grain.1.title': 'Engrain (Petit Épeautre)',
+                'grain.1.desc': 'La plus ancienne des céréales. Appréciée pour sa saveur subtile de noisette et son gluten très digeste.',
+                'grain.2.title': 'Amidonnier',
+                'grain.2.desc': 'Une céréale rustique et nutritive, ancêtre du blé dur. Excellente pour le pain artisanal et les pâtes.',
+                'grain.3.title': 'Blé de Khorasan (Kamut®)',
+                'grain.3.desc': 'Connu pour ses gros grains ambrés et son goût riche et beurré. Riche en protéines et minéraux.',
+                // Demo
+                'demo.title': 'La Confiance, Scellée dans un QR Code',
+                'demo.subtitle': 'Découvrez la puissance du Passeport Numérique Ceres. Cette simulation montre le parcours immuable d\'un lot unique.',
+                'demo.simtitle': 'SIMULATION DU PASSEPORT NUMÉRIQUE',
+                'demo.step1.title': 'Source',
+                'demo.step1.desc': 'Un producteur enregistre le lot de récolte sur la plateforme Ceres.',
+                'demo.step2.title': 'Certifier',
+                'demo.step2.desc': 'Les données (origine, variété, analyses) sont sécurisées dans un QR code unique.',
+                'demo.step3.title': 'Vérifier',
+                'demo.step3.desc': 'Tout acheteur scanne le code pour accéder à l\'historique complet et infalsifiable.',
+                'demo.qrlabel': 'Scannez ce code de démo :',
+                'demo.showbtn': 'Voir le Passeport Numérique',
+                // Passport
+                'passport.title': 'PASSEPORT NUMÉRIQUE CERES',
+                'passport.id': 'Identifiant :',
+                'passport.product': 'Produit :',
+                'passport.origin': 'Origine :',
+                'passport.producer': 'Producteur :',
+                'passport.harvest': 'Date de Récolte :',
+                'passport.method': 'Méthode :',
+                'passport.analysis': 'Analyses :',
+                'passport.journey': 'Trajet :',
+                'passport.cert': 'Certifications :',
+                'passport.attest': '"Ce passeport numérique atteste de manière immuable de l\'authenticité, de la traçabilité complète et des qualités uniques de ce lot. Il fait partie intégrante du contrat entre partenaires vérifiés."',
+                // Signup Form
+                'signup.title': 'Rejoignez le Réseau en Avant-Première',
+                'signup.subtitle': 'Réservé aux acheteurs professionnels (importateurs, meuniers, boulangers premium, distributeurs) et aux producteurs vérifiés de céréales anciennes.',
+                'form.name': 'Nom / Société *',
+                'form.name.ph': 'Votre nom ou celui de votre entreprise',
+                'form.email': 'Email Professionnel *',
+                'form.email.ph': 'email@votre-entreprise.com',
+                'form.role': 'Vous êtes : *',
+                'form.role.default': 'Sélectionnez votre profil',
+                'form.role.buyer': 'Acheteur / Importateur / Distributeur',
+                'form.role.processor': 'Meunier / Boulanger / Artisan',
+                'form.role.producer': 'Producteur / Coopérative Agricole',
+                'form.role.other': 'Autre (précisez dans le message)',
+                'form.message': 'Votre Intérêt pour Ceres',
+                'form.message.ph': 'Parlez-nous de votre activité, de vos recherches en céréales anciennes, ou posez-nous vos questions...',
+                'form.submit': ' Demander mon Accès',
+                'form.privacy': 'Vos informations sont sécurisées. Nous ne partagerons jamais votre email. Consultez notre',
+                'form.privacy.link': 'politique de confidentialité',
+                // Footer
+                'footer.tagline': 'La déesse de l\'agriculture renaît à l\'ère numérique.<br>Construisons ensemble une chaîne d\'approvisionnement transparente, durable et savoureuse.'
+            },
+            'en': {
+                // Navigation
+                'nav.brand': 'CERES',
+                'nav.education': 'The Grains',
+                'nav.demo': 'Traceability Demo',
+                'nav.signup': 'Join the Network',
+                // Hero
+                'hero.title': 'Authentic Ancient Grains.<br><span style="color:var(--primary-gold);">Digitally Certified.</span>',
+                'hero.subtitle': 'Ceres is the trusted B2B network directly connecting European quality buyers with verified producers of heritage grains from Armenia and unique terroirs. Every batch has a story. We certify it.',
+                'hero.cta': 'Request Early Access',
+                // Education
+                'education.title': 'Beyond Wheat: Rediscover Ancient Grains',
+                'education.subtitle': 'These heritage varieties, cultivated for millennia, offer exceptional agronomic, nutritional, and gastronomic value.',
+                'grain.1.title': 'Einkorn (Petit Épeautre)',
+                'grain.1.desc': 'The most ancient wheat. Prized for its subtle nutty flavor and highly digestible gluten.',
+                'grain.2.title': 'Emmer (Amidonnier)',
+                'grain.2.desc': 'A hardy, nutritious ancestor of durum wheat. Excellent for artisanal bread and pasta.',
+                'grain.3.title': 'Khorasan Wheat (Kamut®)',
+                'grain.3.desc': 'Known for its large, amber grains and rich, buttery taste. High in protein and minerals.',
+                // Demo
+                'demo.title': 'Trust, Sealed in a QR Code',
+                'demo.subtitle': 'See the power of the Ceres Digital Passport. This simulation shows the immutable journey of a single batch.',
+                'demo.simtitle': 'DIGITAL PASSPORT SIMULATION',
+                'demo.step1.title': 'Source',
+                'demo.step1.desc': 'A producer registers the harvest batch on the Ceres platform.',
+                'demo.step2.title': 'Certify',
+                'demo.step2.desc': 'Data (origin, variety, analyses) is cryptographically secured to a unique QR code.',
+                'demo.step3.title': 'Verify',
+                'demo.step3.desc': 'Any buyer scans the code to access the full, tamper-proof history.',
+                'demo.qrlabel': 'Scan this demo code:',
+                'demo.showbtn': 'View Digital Passport',
+                // Passport
+                'passport.title': 'CERES DIGITAL PASSPORT',
+                'passport.id': 'ID:',
+                'passport.product': 'Product:',
+                'passport.origin': 'Origin:',
+                'passport.producer': 'Producer:',
+                'passport.harvest': 'Harvest Date:',
+                'passport.method': 'Method:',
+                'passport.analysis': 'Analyses:',
+                'passport.journey': 'Journey:',
+                'passport.cert': 'Certifications:',
+                'passport.attest': '"This digital passport immutably attests to the authenticity, full traceability, and unique qualities of this batch. It is an integral part of the contract between verified partners."',
+                // Signup Form
+                'signup.title': 'Join the Network in Preview',
+                'signup.subtitle': 'For professional buyers (importers, millers, premium bakers, distributors) and verified producers of ancient grains.',
+                'form.name': 'Name / Company *',
+                'form.name.ph': 'Your name or company name',
+                'form.email': 'Professional Email *',
+                'form.email.ph': 'email@your-company.com',
+                'form.role': 'You are: *',
+                'form.role.default': 'Select your profile',
+                'form.role.buyer': 'Buyer / Importer / Distributor',
+                'form.role.processor': 'Miller / Baker / Artisan',
+                'form.role.producer': 'Producer / Agricultural Cooperative',
+                'form.role.other': 'Other (please specify in message)',
+                'form.message': 'Your Interest in Ceres',
+                'form.message.ph': 'Tell us about your business, your interest in ancient grains, or ask us questions...',
+                'form.submit': ' Request My Access',
+                'form.privacy': 'Your information is secure. We never share your email. See our',
+                'form.privacy.link': 'privacy policy',
+                // Footer
+                'footer.tagline': 'The goddess of agriculture reborn in the digital age.<br>Building a transparent, sustainable, and flavorful supply chain together.'
+            }
+        };
+
+        let currentLang = 'fr';
+
+        function updatePageText() {
+            const langData = translations[currentLang];
+            // Update all elements with a data-i18n attribute
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (langData[key]) {
+                    if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+                        el.setAttribute('placeholder', langData[key]);
+                    } else {
+                        el.innerHTML = langData[key];
+                    }
+                }
+            });
+            // Update placeholder attributes separately (they are on different attributes)
+            document.querySelectorAll('[data-i18n-ph]').forEach(el => {
+                const key = el.getAttribute('data-i18n-ph');
+                if (langData[key]) el.setAttribute('placeholder', langData[key]);
+            });
+        }
+
+        document.getElementById('language-toggle').addEventListener('click', function() {
+            currentLang = currentLang === 'fr' ? 'en' : 'fr';
+            this.textContent = currentLang === 'fr' ? 'EN' : 'FR';
+            updatePageText();
+        });
+
+        // ===== 2. INTERACTIVE DEMONSTRATION =====
+        // Generate a QR code for the demo on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Generate QR Code
+            const qrText = `https://ceres.network/verify?id=CERES-AM-742&t=${Date.now()}`;
+            QRCode.toCanvas(document.getElementById('qrcode'), qrText, { width: 160, margin: 1 }, function(error) {
+                if (error) console.error(error);
+            });
+
+            // Initialize page text (language)
+            updatePageText();
+        });
+
+        function showPassport() {
+            const passport = document.getElementById('product-passport');
+            const btn = document.getElementById('passport-btn');
+            if (passport.style.display === 'none' || !passport.style.display) {
+                passport.style.display = 'block';
+                btn.innerHTML = '<i class="fas fa-eye-slash"></i> ' + (currentLang === 'fr' ? 'Cacher le Passeport' : 'Hide Passport');
+                btn.style.backgroundColor = 'var(--primary-earth)';
+                passport.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            } else {
+                passport.style.display = 'none';
+                btn.innerHTML = '<i class="fas fa-eye"></i> ' + (currentLang === 'fr' ? 'Voir le Passeport Numérique' : 'View Digital Passport');
+                btn.style.backgroundColor = '';
+            }
+        }
+
+        // ===== 3. FORMSPREE FORM HANDLING =====
+        const form = document.getElementById('access-form');
+        const statusDiv = document.getElementById('form-status');
+
+        if(form) {
+            form.addEventListener('submit', async function(event) {
+                event.preventDefault();
+                const submitBtn = form.querySelector('button[type="submit"]');
+                const originalText = submitBtn.innerHTML;
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> ' + (currentLang === 'fr' ? 'Envoi...' : 'Sending...');
+                submitBtn.disabled = true;
+
+                try {
+                    const formData = new FormData(form);
+                    const response = await fetch(form.action, {
+                        method: 'POST',
+                        body: formData,
+                        headers: { 'Accept': 'application/json' }
+                    });
+
+                    if (response.ok) {
+                        statusDiv.textContent = currentLang === 'fr' ? '✅ Merci ! Votre demande a été envoyée. Nous vous contacterons très rapidement.' : '✅ Thank you! Your request has been sent. We will contact you shortly.';
+                        statusDiv.className = 'success';
+                        statusDiv.style.display = 'block';
+                        form.reset();
+                    } else {
+                        const error = await response.json();
+                        throw new Error(error.error || 'Form error');
+                    }
+                } catch (err) {
+                    console.error(err);
+                    statusDiv.textContent = currentLang === 'fr' ? '❌ Une erreur est survenue. Veuillez réessayer.' : '❌ An error occurred. Please try again.';
+                    statusDiv.className = 'error';
+                    statusDiv.style.display = 'block';
+                } finally {
+                    submitBtn.innerHTML = originalText;
+                    submitBtn.disabled = false;
+                    setTimeout(() => { statusDiv.style.display = 'none'; }, 7000);
+                }
+            });
+        }
+    </script>
+</body>
+</html>
