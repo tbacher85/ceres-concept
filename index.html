@@ -186,7 +186,14 @@
         @media (max-width: 768px) {
             .container { padding: 0 1.5rem; }
             section { padding: 3.5rem 0; }
-            .nav-links { display: none; } /* Consider a mobile menu for full site */
+            .nav-links { 
+                display: none; /* Main nav links hidden on mobile */
+            }
+            /* Make sure language toggle is visible on mobile */
+            #language-toggle {
+                display: block !important; /* Force display on mobile */
+                margin-left: auto; /* Push to the right */
+            }
             .hero h1 { font-size: 2.5rem; }
             .grain-grid { grid-template-columns: 1fr; }
             .simulation-box { padding: 2rem 1.5rem; }
@@ -204,8 +211,9 @@
                 <a href="#education" data-i18n="nav.education">The Grains</a>
                 <a href="#demo" data-i18n="nav.demo">Traceability Demo</a>
                 <a href="#signup" data-i18n="nav.signup">Join the Network</a>
-                <button id="language-toggle">EN</button>
             </div>
+            <!-- Language toggle moved OUTSIDE nav-links so it stays visible on mobile -->
+            <button id="language-toggle">EN</button>
         </nav>
     </header>
 
@@ -419,7 +427,8 @@
                 'form.message': 'Votre Intérêt pour Ceres',
                 'form.message.ph': 'Parlez-nous de votre activité, de vos recherches en céréales anciennes, ou posez-nous vos questions...',
                 'form.submit': ' Demander mon Accès',
-                'form.privacy': 'Vos informations sont sécurisées. Nous ne partagerons jamais votre email.',
+                'form.privacy': 'Vos informations sont sécurisées. Nous ne partagerons jamais votre email. Consultez notre',
+                'form.privacy.link': 'politique de confidentialité',
                 // Footer
                 'footer.tagline': 'La déesse de l\'agriculture renaît à l\'ère numérique.<br>Construisons ensemble une chaîne d\'approvisionnement transparente, durable et savoureuse.'
             },
